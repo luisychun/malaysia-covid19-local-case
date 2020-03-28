@@ -13,7 +13,9 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <p>{{ myDataSet }}</p>
+      <p>{{ confirmSet }}</p>
+      <p>{{ deathSet }}</p>
+      <p>{{ recoverSet }}</p>
     </v-row>
   </v-container>
 </template>
@@ -28,16 +30,22 @@ export default {
       { title: "Dead", color: "danger" },
       { title: "Recover", color: "primary" }
     ],
-    url:
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
     globalDataKey: new Object(),
     globalDataSet: new Array(),
-    myDataSet: new Object()
+    confirmSet: new Object(),
+    deathSet: new Object(),
+    recoverSet: new Object(),
+    fetechURL: [
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+    ]
   }),
   methods: {
-    fetchData() {
+    fetchConfirmCase() {
+      let category = "Confirm";
       let papa = this.$papa,
-        url = this.url,
+        url = this.fetechURL[0],
         processData = this.processData,
         dataSet = new Array();
 
@@ -57,14 +65,74 @@ export default {
 
       promise
         .then(function() {
-          processData(dataSet);
+          processData(dataSet, category);
         })
         .catch(function(err) {
           console.log(err);
         });
     },
 
-    processData(dataSet) {
+    fetchDeathCase() {
+      let category = "Death";
+      let papa = this.$papa,
+        url = this.fetechURL[1],
+        processData = this.processData,
+        dataSet = new Array();
+
+      let promise = new Promise(function(resolve, reject) {
+        papa.parse(url, {
+          download: true,
+          complete: function(results) {
+            dataSet = results.data;
+            if (dataSet) {
+              resolve();
+            } else {
+              reject();
+            }
+          }
+        });
+      });
+
+      promise
+        .then(function() {
+          processData(dataSet, category);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+    },
+
+    fetchRecoverCase() {
+      let category = "Recover";
+      let papa = this.$papa,
+        url = this.fetechURL[2],
+        processData = this.processData,
+        dataSet = new Array();
+
+      let promise = new Promise(function(resolve, reject) {
+        papa.parse(url, {
+          download: true,
+          complete: function(results) {
+            dataSet = results.data;
+            if (dataSet) {
+              resolve();
+            } else {
+              reject();
+            }
+          }
+        });
+      });
+
+      promise
+        .then(function() {
+          processData(dataSet, category);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+    },
+
+    processData(dataSet, category) {
       let getMyData = this.getMyData;
       this.globalDataKey = dataSet[0];
       for (let i = 1; i < dataSet.length; i++) {
@@ -74,22 +142,30 @@ export default {
         }
         this.globalDataSet.push(dataContainer);
       }
-      getMyData(this.globalDataSet);
+      getMyData(this.globalDataSet, category);
     },
 
-    getMyData(myData) {
+    getMyData(myData, category) {
       myData.forEach((my, index) => {
         let key = myData[index]["Country/Region"];
         if (key === "Malaysia") {
-          this.myDataSet = myData[index];
+          if (category === "Confirm") {
+            this.confirmSet = myData[index];
+          } else if (category === "Death") {
+            this.deathSet = myData[index];
+          } else {
+            this.recoverSet = myData[index];
+          }
         }
       });
-      return this.myDataSet;
+      // console.log(this.confirmSet);
     }
   },
 
   created() {
-    this.fetchData();
+    this.fetchConfirmCase();
+    this.fetchDeathCase();
+    this.fetchRecoverCase();
   }
 };
 </script>
