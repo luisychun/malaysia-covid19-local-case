@@ -1,81 +1,17 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br />please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank"
-            >Discord Community</a
-          >
-        </p>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
+      <v-col cols="4" v-for="category in categories" :key="category.title">
+        <v-card class="pa-2" outlined tile>
+          <v-card-text>
+            <p class="display-1 text--primary">{{ category.title }} Case</p>
+            <p>adjective</p>
+            <div class="text--primary">
+              well meaning and kindly.
+              <br />"a benevolent smile"
+            </div>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -86,56 +22,73 @@ export default {
   name: "HelloWorld",
 
   data: () => ({
-    ecosystem: [
-      {
-        text: "vuetify-loader",
-        href: "https://github.com/vuetifyjs/vuetify-loader"
-      },
-      {
-        text: "github",
-        href: "https://github.com/vuetifyjs/vuetify"
-      },
-      {
-        text: "awesome-vuetify",
-        href: "https://github.com/vuetifyjs/awesome-vuetify"
-      }
+    categories: [
+      { title: "Confirmed", color: "warning" },
+      { title: "Dead", color: "danger" },
+      { title: "Recover", color: "primary" }
     ],
-    importantLinks: [
-      {
-        text: "Documentation",
-        href: "https://vuetifyjs.com"
-      },
-      {
-        text: "Chat",
-        href: "https://community.vuetifyjs.com"
-      },
-      {
-        text: "Made with Vuetify",
-        href: "https://madewithvuejs.com/vuetify"
-      },
-      {
-        text: "Twitter",
-        href: "https://twitter.com/vuetifyjs"
-      },
-      {
-        text: "Articles",
-        href: "https://medium.com/vuetify"
+    url:
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+    globalDataKey: new Object(),
+    globalDataSet: new Array()
+  }),
+  methods: {
+    fetchData() {
+      let papa = this.$papa,
+        url = this.url,
+        processData = this.processData,
+        dataSet = new Array();
+
+      let promise = new Promise(function(resolve, reject) {
+        papa.parse(url, {
+          download: true,
+          complete: function(results) {
+            dataSet = results.data;
+            if (dataSet) {
+              resolve();
+            } else {
+              reject();
+            }
+          }
+        });
+      });
+
+      promise
+        .then(function() {
+          processData(dataSet);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+    },
+
+    processData(dataSet) {
+      let getMyData = this.getMyData;
+      this.globalDataKey = dataSet[0];
+      for (let i = 1; i < dataSet.length; i++) {
+        let dataContainer = new Object();
+        for (let k = 0; k < this.globalDataKey.length; k++) {
+          dataContainer[this.globalDataKey[k]] = dataSet[i][k];
+        }
+        this.globalDataSet.push(dataContainer);
       }
-    ],
-    whatsNext: [
-      {
-        text: "Explore components",
-        href: "https://vuetifyjs.com/components/api-explorer"
-      },
-      {
-        text: "Select a layout",
-        href: "https://vuetifyjs.com/layout/pre-defined"
-      },
-      {
-        text: "Frequently Asked Questions",
-        href: "https://vuetifyjs.com/getting-started/frequently-asked-questions"
-      }
-    ]
-  })
+      getMyData(this.globalDataSet);
+    },
+
+    getMyData(myData) {
+      let data = new Object();
+      myData.forEach((my, index) => {
+        let key = myData[index]["Country/Region"];
+        if (key === "Malaysia") {
+          data = myData[index];
+        }
+      });
+      console.log(data);
+    }
+  },
+
+  created() {
+    this.fetchData();
+  }
 };
 </script>
