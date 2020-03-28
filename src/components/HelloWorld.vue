@@ -13,6 +13,7 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <p>{{ myDataSet }}</p>
     </v-row>
   </v-container>
 </template>
@@ -30,7 +31,8 @@ export default {
     url:
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
     globalDataKey: new Object(),
-    globalDataSet: new Array()
+    globalDataSet: new Array(),
+    myDataSet: new Object()
   }),
   methods: {
     fetchData() {
@@ -76,14 +78,13 @@ export default {
     },
 
     getMyData(myData) {
-      let data = new Object();
       myData.forEach((my, index) => {
         let key = myData[index]["Country/Region"];
         if (key === "Malaysia") {
-          data = myData[index];
+          this.myDataSet = myData[index];
         }
       });
-      console.log(data);
+      return this.myDataSet;
     }
   },
 
