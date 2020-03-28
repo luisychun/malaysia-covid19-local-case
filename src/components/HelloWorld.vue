@@ -1,21 +1,14 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col cols="4" v-for="category in categories" :key="category.title">
+      <v-col cols="12" lg="4" v-for="category in categories" :key="category.title">
         <v-card class="pa-2" outlined tile>
           <v-card-text>
             <p class="display-1 text--primary">{{ category.title }} Case</p>
-            <p>adjective</p>
-            <div class="text--primary">
-              well meaning and kindly.
-              <br />"a benevolent smile"
-            </div>
+            <div class="display-2 text--primary">{{ showLatestCase(category.title) }}</div>
           </v-card-text>
         </v-card>
       </v-col>
-      <p>{{ confirmSet }}</p>
-      <p>{{ deathSet }}</p>
-      <p>{{ recoverSet }}</p>
     </v-row>
   </v-container>
 </template>
@@ -39,7 +32,8 @@ export default {
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
-    ]
+    ],
+    currectDate: ""
   }),
   methods: {
     fetchConfirmCase() {
@@ -159,6 +153,28 @@ export default {
         }
       });
       // console.log(this.confirmSet);
+    },
+
+    getCurrectDate() {
+      let today = new Date();
+      let dd = today.getDate() - 1;
+      let mm = today.getMonth() + 1;
+      let yy = today
+        .getFullYear()
+        .toString()
+        .substr(-2);
+
+      this.currectDate = `${mm}/${dd}/${yy}`;
+    },
+
+    showLatestCase(title) {
+      if (title === "Confirmed") {
+        return this.confirmSet[this.currectDate];
+      } else if (title === "Dead") {
+        return this.deathSet[this.currectDate];
+      } else {
+        return this.recoverSet[this.currectDate];
+      }
     }
   },
 
@@ -166,6 +182,7 @@ export default {
     this.fetchConfirmCase();
     this.fetchDeathCase();
     this.fetchRecoverCase();
+    this.getCurrectDate();
   }
 };
 </script>
