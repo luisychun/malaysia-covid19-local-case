@@ -30,20 +30,16 @@
     </v-app-bar>
 
     <v-content>
-      <Dashboard />
+      <router-view></router-view>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Dashboard from "./components/Dashboard";
-
 export default {
   name: "App",
 
-  components: {
-    Dashboard
-  },
+  components: {},
 
   data: () => ({
     //
