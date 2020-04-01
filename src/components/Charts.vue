@@ -1,23 +1,37 @@
 <template>
   <div>
-    <p>Charts</p>
-    <line-chart :data="lists" />
+    <area-chart :data="fetchData()" width="1000px" height="500px"></area-chart>
   </div>
 </template>
 
 <script>
 export default {
   name: "Charts",
+  props: ["confirm", "death", "recover"],
   data() {
-    return {
-      lists: [
-        { name: "Workout", data: { "01-01-2017": 3, "2017-01-02": 4 } },
-        { name: "Call parents", data: { "2017-01-01": 5, "2017-01-02": 3 } }
-      ]
-    };
+    return {};
+  },
+  methods: {
+    fetchData() {
+      let list = new Array();
+      list = [
+        { name: "Confirm", data: this.confirm },
+        { name: "Death", data: this.death },
+        { name: "Recover", data: this.recover }
+      ];
+      return list;
+    }
+  },
+  created() {
+    this.fetchData();
   }
 };
 </script>
 
-<style>
-</style>
+<style scoped>
+#chart-1 {
+  position: relative;
+  width: 60vw !important;
+  height: 40vh !important;
+}
+</style>>

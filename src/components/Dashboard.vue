@@ -10,13 +10,19 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row class="text-center justify-center">
+      <Charts :confirm="confirmProps" :death="deathProps" :recover="recoverProps" />
+    </v-row>
   </v-container>
 </template>
 
 <script>
+import Charts from "@/components/Charts.vue";
 export default {
   name: "Dashboard",
-
+  components: {
+    Charts
+  },
   data: () => ({
     categories: [
       { title: "Confirmed", color: "warning" },
@@ -33,7 +39,10 @@ export default {
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
     ],
-    currectDate: ""
+    currectDate: "",
+    confirmProps: new Array(),
+    deathProps: new Array(),
+    recoverProps: new Array()
   }),
   methods: {
     fetchConfirmCase() {
@@ -145,13 +154,20 @@ export default {
         if (key === "Malaysia") {
           if (category === "Confirm") {
             this.confirmSet = myData[index];
+            this.confirmProps = Object.entries(this.confirmSet);
+            this.confirmProps = this.confirmProps.splice(4);
           } else if (category === "Death") {
             this.deathSet = myData[index];
+            this.deathProps = Object.entries(this.deathSet);
+            this.deathProps = this.deathProps.splice(4);
           } else {
             this.recoverSet = myData[index];
+            this.recoverProps = Object.entries(this.recoverSet);
+            this.recoverProps = this.recoverProps.splice(4);
           }
         }
       });
+
       // console.log(this.confirmSet);
     },
 
@@ -163,7 +179,9 @@ export default {
         .getFullYear()
         .toString()
         .substr(-2);
-
+      if (dd == 0) {
+        dd += 1;
+      }
       this.currectDate = `${mm}/${dd}/${yy}`;
     },
 
