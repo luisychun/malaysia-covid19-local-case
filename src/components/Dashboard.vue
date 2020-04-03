@@ -25,114 +25,56 @@ export default {
   },
   data: () => ({
     categories: [
-      { title: "Confirmed", color: "warning" },
-      { title: "Dead", color: "danger" },
+      { title: "Confirm", color: "warning" },
+      { title: "Death", color: "danger" },
       { title: "Recover", color: "primary" }
+    ],
+    fetechURL: [
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
     ],
     globalDataKey: new Object(),
     globalDataSet: new Array(),
     confirmSet: new Object(),
     deathSet: new Object(),
     recoverSet: new Object(),
-    fetechURL: [
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
-    ],
-    currectDate: "",
     confirmProps: new Array(),
     deathProps: new Array(),
-    recoverProps: new Array()
+    recoverProps: new Array(),
+    currectDate: ""
   }),
   methods: {
-    fetchConfirmCase() {
-      let category = "Confirm";
-      let papa = this.$papa,
-        url = this.fetechURL[0],
-        processData = this.processData,
-        dataSet = new Array();
+    fetchCase() {
+      for (let i = 0; i < this.categories.length; i++) {
+        let category = this.categories[i].title,
+          url = this.fetechURL[i],
+          papa = this.$papa,
+          processData = this.processData,
+          dataSet = new Array();
 
-      let promise = new Promise(function(resolve, reject) {
-        papa.parse(url, {
-          download: true,
-          complete: function(results) {
-            dataSet = results.data;
-            if (dataSet) {
-              resolve();
-            } else {
-              reject();
+        let promise = new Promise(function(resolve, reject) {
+          papa.parse(url, {
+            download: true,
+            complete: function(results) {
+              dataSet = results.data;
+              if (dataSet) {
+                resolve();
+              } else {
+                reject();
+              }
             }
-          }
+          });
         });
-      });
 
-      promise
-        .then(function() {
-          processData(dataSet, category);
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
-    },
-
-    fetchDeathCase() {
-      let category = "Death";
-      let papa = this.$papa,
-        url = this.fetechURL[1],
-        processData = this.processData,
-        dataSet = new Array();
-
-      let promise = new Promise(function(resolve, reject) {
-        papa.parse(url, {
-          download: true,
-          complete: function(results) {
-            dataSet = results.data;
-            if (dataSet) {
-              resolve();
-            } else {
-              reject();
-            }
-          }
-        });
-      });
-
-      promise
-        .then(function() {
-          processData(dataSet, category);
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
-    },
-
-    fetchRecoverCase() {
-      let category = "Recover";
-      let papa = this.$papa,
-        url = this.fetechURL[2],
-        processData = this.processData,
-        dataSet = new Array();
-
-      let promise = new Promise(function(resolve, reject) {
-        papa.parse(url, {
-          download: true,
-          complete: function(results) {
-            dataSet = results.data;
-            if (dataSet) {
-              resolve();
-            } else {
-              reject();
-            }
-          }
-        });
-      });
-
-      promise
-        .then(function() {
-          processData(dataSet, category);
-        })
-        .catch(function(err) {
-          console.log(err);
-        });
+        promise
+          .then(function() {
+            processData(dataSet, category);
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
+      }
     },
 
     processData(dataSet, category) {
@@ -167,8 +109,6 @@ export default {
           }
         }
       });
-
-      // console.log(this.confirmSet);
     },
 
     getCurrectDate() {
@@ -186,9 +126,9 @@ export default {
     },
 
     showLatestCase(title) {
-      if (title === "Confirmed") {
+      if (title === "Confirm") {
         return this.confirmSet[this.currectDate];
-      } else if (title === "Dead") {
+      } else if (title === "Death") {
         return this.deathSet[this.currectDate];
       } else {
         return this.recoverSet[this.currectDate];
@@ -197,9 +137,7 @@ export default {
   },
 
   created() {
-    this.fetchConfirmCase();
-    this.fetchDeathCase();
-    this.fetchRecoverCase();
+    this.fetchCase();
     this.getCurrectDate();
   }
 };

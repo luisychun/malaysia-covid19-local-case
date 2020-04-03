@@ -1,6 +1,6 @@
 <template>
   <div>
-    <area-chart :data="fetchData()" width="1000px" height="500px"></area-chart>
+    <area-chart :data="fetchData()" width="1000px" height="600px"></area-chart>
   </div>
 </template>
 
@@ -32,6 +32,6 @@ export default {
 #chart-1 {
   position: relative;
   width: 60vw !important;
-  height: 40vh !important;
+  height: 60vh !important;
 }
 </style>>

@@ -1,16 +1,11 @@
 <template>
-  <div class="about">
-    <Charts />
-  </div>
+  <div class="about"></div>
 </template>
 
 <script>
-import Charts from "@/components/Charts.vue";
 export default {
   name: "About",
-  components: {
-    Charts
-  }
+  components: {}
 };
 </script>
 
