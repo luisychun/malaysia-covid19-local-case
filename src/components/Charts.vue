@@ -1,6 +1,6 @@
 <template>
   <div>
-    <area-chart :data="fetchData()" width="1000px" height="600px"></area-chart>
+    <line-chart :data="fetchData()" xtitle="Date" ytitle="Cases">></line-chart>
   </div>
 </template>
 
@@ -29,9 +29,10 @@ export default {
 </script>
 
 <style scoped>
-#chart-1 {
+#chart-1,
+#chart-2 {
   position: relative;
-  width: 60vw !important;
-  height: 60vh !important;
+  width: 80vw !important;
+  height: 80vh !important;
 }
 </style>>

@@ -6,6 +6,11 @@
           <v-card-text>
             <p class="display-1 text--primary">{{ category.title }} Case</p>
             <div class="display-2 text--primary">{{ showLatestCase(category.title) }}</div>
+            <span class="mt-2">
+              <v-icon v-if="compareCase(category.title) > 0" :color="iconColor">mdi-arrow-top-right</v-icon>
+              <v-icon v-else :color="iconColor">mdi-arrow-right</v-icon>
+              {{ compareCase(category.title) }}
+            </span>
           </v-card-text>
         </v-card>
       </v-col>
@@ -42,7 +47,9 @@ export default {
     confirmProps: new Array(),
     deathProps: new Array(),
     recoverProps: new Array(),
-    currectDate: ""
+    currectDate: "",
+    previousDate: "",
+    comparePrevious: ""
   }),
   methods: {
     fetchCase() {
@@ -126,6 +133,20 @@ export default {
       this.currectDate = `${mm}/${dd}/${yy}`;
     },
 
+    getPreviousDate() {
+      let today = new Date();
+      let dd = today.getDate() - 2;
+      let mm = today.getMonth() + 1;
+      let yy = today
+        .getFullYear()
+        .toString()
+        .substr(-2);
+      if (dd == 0) {
+        dd += 1;
+      }
+      this.previousDate = `${mm}/${dd}/${yy}`;
+    },
+
     showLatestCase(title) {
       if (title === "Confirm") {
         return this.confirmSet[this.currectDate];
@@ -134,12 +155,42 @@ export default {
       } else {
         return this.recoverSet[this.currectDate];
       }
+    },
+
+    compareCase(title) {
+      let currectCase = "";
+      let previousCase = "";
+      if (title == "Confirm") {
+        currectCase = this.confirmSet[this.currectDate];
+        previousCase = this.confirmSet[this.previousDate];
+      } else if (title === "Death") {
+        currectCase = this.deathSet[this.currectDate];
+        previousCase = this.deathSet[this.previousDate];
+      } else {
+        currectCase = this.recoverSet[this.currectDate];
+        previousCase = this.recoverSet[this.previousDate];
+      }
+      if (currectCase === previousCase) {
+        return 0;
+      } else {
+        let diff = "";
+        diff = currectCase - previousCase;
+        return diff;
+      }
+    }
+  },
+
+  computed: {
+    iconColor() {
+      let color = this.compareCase > "0" ? "red" : "green";
+      return color;
     }
   },
 
   created() {
     this.fetchCase();
     this.getCurrectDate();
+    this.getPreviousDate();
   }
 };
 </script>
