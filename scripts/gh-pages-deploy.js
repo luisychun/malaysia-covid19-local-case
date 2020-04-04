@@ -1,7 +1,5 @@
-import execa from "execa";
-import {
-  existsSync
-} from "fs";
+const execa = require("execa");
+const fs = require("fs");
 
 (async () => {
   try {
@@ -9,7 +7,7 @@ import {
     console.log("Building...");
     await execa("npm", ["run", "build"]);
     // Understand if it's dist or build folder
-    const folderName = existsSync("dist") ? "dist" : "build";
+    const folderName = "dist";
     await execa("git", ["--work-tree", folderName, "add", "--all"]);
     await execa("git", ["--work-tree", folderName, "commit", "-m", "gh-pages"]);
     console.log("Pushing to gh-pages...");
