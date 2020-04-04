@@ -72,7 +72,8 @@ export default {
             processData(dataSet, category);
           })
           .catch(function(err) {
-            console.log(err);
+            // console.log(err);
+            return err;
           });
       }
     },
