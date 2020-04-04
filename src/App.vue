@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="#263238" dark>
       <v-btn small text>
         <span class="mr-2">Malaysia Covid-19 Local Cases</span>
       </v-btn>
