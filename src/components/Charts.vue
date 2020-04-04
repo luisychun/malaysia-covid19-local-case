@@ -1,6 +1,6 @@
 <template>
   <div>
-    <line-chart :data="fetchData()" xtitle="Date" ytitle="Cases">></line-chart>
+    <line-chart :data="fetchData()">></line-chart>
   </div>
 </template>
 
@@ -33,6 +33,6 @@ export default {
 #chart-2 {
   position: relative;
   width: 80vw !important;
-  height: 80vh !important;
+  height: 40vh !important;
 }
 </style>>

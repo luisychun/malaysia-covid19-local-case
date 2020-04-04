@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row class="text-center">
       <v-col cols="12" lg="4" v-for="category in categories" :key="category.title">
         <v-card class="pa-2" outlined tile>
