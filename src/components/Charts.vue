@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row class="justify-center text-center">
-      <v-col cols="3">
+      <v-col cols="12" lg="3">
         <v-select
           :items="items"
           item-value="items"
