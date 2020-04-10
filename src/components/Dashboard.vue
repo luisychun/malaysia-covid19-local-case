@@ -21,7 +21,9 @@
     <v-row class="text-center justify-center mt-4">
       <p>
         Last updated: {{ currectDate }} from
-        <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a>
+        <a
+          href="https://github.com/CSSEGISandData/COVID-19"
+        >JHU CSSE</a>
       </p>
     </v-row>
   </v-container>
@@ -153,7 +155,7 @@ export default {
     },
 
     showLatestCase(title) {
-      if (title === "Confirm") {
+      if (title === "Confirmed") {
         return this.confirmSet[this.currectDate];
       } else if (title === "Death") {
         return this.deathSet[this.currectDate];
@@ -165,7 +167,7 @@ export default {
     compareCase(title) {
       let currectCase = "";
       let previousCase = "";
-      if (title == "Confirm") {
+      if (title == "Confirmed") {
         currectCase = this.confirmSet[this.currectDate];
         previousCase = this.confirmSet[this.previousDate];
       } else if (title === "Death") {
