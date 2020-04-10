@@ -2,11 +2,9 @@
   <v-app>
     <v-app-bar app color="#263238" dark>
       <v-btn small text>
-        <span class="mr-2">Malaysia Covid-19 Local Cases</span>
+        <span class="mr-2">Malaysia Covid-19 Cases</span>
       </v-btn>
-
       <v-spacer></v-spacer>
-
       <v-btn
         small
         href="https://github.com/luisychun/malaysia-covid19-local-case"

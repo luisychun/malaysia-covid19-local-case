@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
-    <v-row class="text-center">
-      <v-col cols="12" lg="4" v-for="category in categories" :key="category.title">
+    <v-row class="text-center justify-center">
+      <v-col cols="12" lg="3" v-for="(category, index) in categories" :key="index">
         <v-card class="pa-2" outlined tile>
           <v-card-text>
-            <p class="display-1 text--primary">{{ category.title }} Case</p>
-            <div class="display-2 text--primary">{{ showLatestCase(category.title) }}</div>
+            <p class="display-1 text--primary">{{ category.title }}</p>
+            <p class="display-2">{{ showLatestCase(category.title) }}</p>
             <span class="mt-2">
               <v-icon v-if="compareCase(category.title) > 0" :color="iconColor">mdi-arrow-top-right</v-icon>
               <v-icon v-else :color="iconColor">mdi-arrow-right</v-icon>
@@ -15,8 +15,14 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row class="text-center justify-center">
+    <v-row class="text-center justify-center mt-4">
       <Charts :confirm="confirmProps" :death="deathProps" :recover="recoverProps" />
+    </v-row>
+    <v-row class="text-center justify-center mt-4">
+      <p>
+        Last updated: {{ currectDate }} from
+        <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a>
+      </p>
     </v-row>
   </v-container>
 </template>
@@ -30,9 +36,9 @@ export default {
   },
   data: () => ({
     categories: [
-      { title: "Confirm", color: "warning" },
+      { title: "Confirmed", color: "warning" },
       { title: "Death", color: "danger" },
-      { title: "Recover", color: "primary" }
+      { title: "Recovered", color: "primary" }
     ],
     fetechURL: [
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
@@ -48,8 +54,7 @@ export default {
     deathProps: new Array(),
     recoverProps: new Array(),
     currectDate: "",
-    previousDate: "",
-    comparePrevious: ""
+    previousDate: ""
   }),
   methods: {
     fetchCase() {
@@ -102,7 +107,7 @@ export default {
       myData.forEach((my, index) => {
         let key = myData[index]["Country/Region"];
         if (key === "Malaysia") {
-          if (category === "Confirm") {
+          if (category === "Confirmed") {
             this.confirmSet = myData[index];
             this.confirmProps = Object.entries(this.confirmSet);
             this.confirmProps = this.confirmProps.splice(4);
