@@ -7,8 +7,11 @@
             <p class="display-1 text--primary">{{ category.title }}</p>
             <p class="display-2">{{ showLatestCase(category.title) }}</p>
             <span class="mt-2">
-              <v-icon v-if="compareCase(category.title) > 0" :color="iconColor">mdi-arrow-top-right</v-icon>
-              <v-icon v-else :color="iconColor">mdi-arrow-right</v-icon>
+              <v-icon
+                v-if="compareCase(category.title) > 0"
+                :color="iconColor(category.title)"
+              >mdi-arrow-top-right</v-icon>
+              <v-icon v-else :color="iconColor(category.title)">mdi-arrow-right</v-icon>
               {{ compareCase(category.title) }}
             </span>
           </v-card-text>
@@ -23,6 +26,7 @@
         Last updated: {{ currectDate }} from
         <a
           href="https://github.com/CSSEGISandData/COVID-19"
+          target="_blank"
         >JHU CSSE</a>
       </p>
     </v-row>
@@ -177,22 +181,22 @@ export default {
         currectCase = this.recoverSet[this.currectDate];
         previousCase = this.recoverSet[this.previousDate];
       }
-      if (currectCase === previousCase) {
+      if (parseInt(currectCase) === parseInt(previousCase)) {
         return 0;
       } else {
         let diff = "";
         diff = currectCase - previousCase;
-        return diff;
+        return parseInt(diff);
       }
-    }
-  },
+    },
 
-  computed: {
-    iconColor() {
-      let color = this.compareCase > "0" ? "red" : "green";
+    iconColor(title) {
+      let color = parseInt(this.compareCase(title)) > 0 ? "red" : "green";
       return color;
     }
   },
+
+  computed: {},
 
   created() {
     this.fetchCase();
