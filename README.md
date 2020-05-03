@@ -1,4 +1,4 @@
-# msia-covid-case
+# Malaysia COVID-19 Local Cases
 
 ## Project setup
 ```
@@ -15,10 +15,5 @@ npm run serve
 npm run build
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Data Source 
+[JHU CSSE](https://github.com/CSSEGISandData/COVID-19)
