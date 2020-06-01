@@ -132,29 +132,25 @@ export default {
 
     getCurrectDate() {
       let today = new Date();
-      let dd = today.getDate() - 1;
+      today.setDate(today.getDate() - 1);
+      let dd = today.getDate();
       let mm = today.getMonth() + 1;
       let yy = today
         .getFullYear()
         .toString()
         .substr(-2);
-      if (dd == 0) {
-        dd += 1;
-      }
       this.currectDate = `${mm}/${dd}/${yy}`;
     },
 
     getPreviousDate() {
       let today = new Date();
-      let dd = today.getDate() - 2;
+      today.setDate(today.getDate() - 2);
+      let dd = today.getDate();
       let mm = today.getMonth() + 1;
       let yy = today
         .getFullYear()
         .toString()
         .substr(-2);
-      if (dd == 0) {
-        dd += 1;
-      }
       this.previousDate = `${mm}/${dd}/${yy}`;
     },
 
