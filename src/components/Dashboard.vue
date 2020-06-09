@@ -5,7 +5,7 @@
         <v-card class="pa-2" outlined tile>
           <v-card-text>
             <p class="display-1 text--primary">{{ category.title }}</p>
-            <p class="display-2">{{ showLatestCase(category.title) }}</p>
+            <p class="display-2">{{ getLatestCaseAvailable(category.title) }}</p>
             <span class="mt-2">
               <v-icon
                 v-if="compareCase(category.title) > 0"
@@ -23,7 +23,7 @@
     </v-row>
     <v-row class="text-center justify-center mt-4">
       <p>
-        Last updated: {{ currectDate }} from
+        Last updated: {{ latestDateGet }} from
         <a
           href="https://github.com/CSSEGISandData/COVID-19"
           target="_blank"
@@ -60,7 +60,11 @@ export default {
     deathProps: new Array(),
     recoverProps: new Array(),
     currectDate: "",
-    previousDate: ""
+    previousDate: "",
+    latestDateGet: "",
+    latestConfirmedIndex: "",
+    latestDeadIndex: "",
+    latestRecoveredIndex: ""
   }),
   methods: {
     fetchCase() {
@@ -113,19 +117,27 @@ export default {
       myData.forEach((my, index) => {
         let key = myData[index]["Country/Region"];
         if (key === "Malaysia") {
+          let last = "";
           if (category === "Confirmed") {
             this.confirmSet = myData[index];
+            last = Object.keys(this.confirmSet).pop();
+            this.latestConfirmedIndex = this.confirmSet[last];
             this.confirmProps = Object.entries(this.confirmSet);
             this.confirmProps = this.confirmProps.splice(4);
           } else if (category === "Death") {
             this.deathSet = myData[index];
+            last = Object.keys(this.deathSet).pop();
+            this.latestDeadIndex = this.deathSet[last];
             this.deathProps = Object.entries(this.deathSet);
             this.deathProps = this.deathProps.splice(4);
           } else {
             this.recoverSet = myData[index];
+            last = Object.keys(this.recoverSet).pop();
+            this.latestRecoveredIndex = this.recoverSet[last];
             this.recoverProps = Object.entries(this.recoverSet);
             this.recoverProps = this.recoverProps.splice(4);
           }
+          this.latestDateGet = last;
         }
       });
     },
@@ -164,24 +176,34 @@ export default {
       }
     },
 
+    getLatestCaseAvailable(title) {
+      if (title === "Confirmed") {
+        return this.latestConfirmedIndex;
+      } else if (title === "Death") {
+        return this.latestDeadIndex;
+      } else {
+        return this.latestRecoveredIndex;
+      }
+    },
+
     compareCase(title) {
-      let currectCase = "";
+      let currentCase = "";
       let previousCase = "";
       if (title == "Confirmed") {
-        currectCase = this.confirmSet[this.currectDate];
+        currentCase = this.confirmSet[this.currectDate];
         previousCase = this.confirmSet[this.previousDate];
       } else if (title === "Death") {
-        currectCase = this.deathSet[this.currectDate];
+        currentCase = this.deathSet[this.currectDate];
         previousCase = this.deathSet[this.previousDate];
       } else {
-        currectCase = this.recoverSet[this.currectDate];
+        currentCase = this.recoverSet[this.currectDate];
         previousCase = this.recoverSet[this.previousDate];
       }
-      if (parseInt(currectCase) === parseInt(previousCase)) {
+      if (parseInt(currentCase) === parseInt(previousCase)) {
         return 0;
       } else {
         let diff = "";
-        diff = currectCase - previousCase;
+        diff = currentCase - previousCase;
         return parseInt(diff);
       }
     },
