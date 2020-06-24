@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row class="justify-center text-center">
-      <v-col cols="12" lg="3">
+      <v-col cols="9" lg="3">
         <v-select
           :items="items"
           item-value="items"
@@ -11,7 +11,7 @@
         ></v-select>
       </v-col>
     </v-row>
-    <line-chart :data="fetchData(caseFilter)" :min="1" xmin="6/1/20"></line-chart>
+    <line-chart :data="fetchData(caseFilter)" :min="1" xmin="6/1/20" :library="options"></line-chart>
   </div>
 </template>
 
@@ -22,7 +22,18 @@ export default {
   data() {
     return {
       caseFilter: "All",
-      items: ["All", "Confirmed", "Death", "Recovered"]
+      items: ["All", "Confirmed", "Death", "Recovered"],
+      options: {
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                display: false
+              }
+            }
+          ]
+        }
+      }
     };
   },
   methods: {
@@ -71,7 +82,7 @@ export default {
 @media (max-width: 768px) {
   #chart-1,
   #chart-2 {
-    margin-right: 2rem;
+    width: 90vw !important;
   }
 }
 </style>>
