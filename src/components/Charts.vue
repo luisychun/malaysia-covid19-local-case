@@ -28,7 +28,7 @@ export default {
           yAxes: [
             {
               ticks: {
-                display: false
+                display: true
               }
             }
           ]
@@ -67,6 +67,13 @@ export default {
   },
   created() {
     this.fetchData(this.caseFilter);
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      this.options.scales.yAxes[0].ticks.display = false;
+    }
   }
 };
 </script>
