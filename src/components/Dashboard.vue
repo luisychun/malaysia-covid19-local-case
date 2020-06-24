@@ -11,15 +11,16 @@
                 v-if="compareCase(category.title) > 0"
                 :color="iconColor(category.title)"
               >mdi-arrow-top-right</v-icon>
-              <v-icon v-else :color="iconColor(category.title)">mdi-arrow-right</v-icon>
+              <v-icon
+                v-else-if="compareCase(category.title) == 0"
+                :color="iconColor(category.title)"
+              >mdi-arrow-right</v-icon>
+              <v-icon v-else>mdi-window-close</v-icon>
               {{ compareCase(category.title) }}
             </span>
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
-    <v-row class="text-center justify-center mt-4">
-      <Charts :confirm="confirmProps" :death="deathProps" :recover="recoverProps" />
     </v-row>
     <v-row class="text-center justify-center mt-4">
       <p>
@@ -29,6 +30,9 @@
           target="_blank"
         >JHU CSSE</a>
       </p>
+    </v-row>
+    <v-row class="text-center justify-center mt-4">
+      <Charts :confirm="confirmProps" :death="deathProps" :recover="recoverProps" />
     </v-row>
   </v-container>
 </template>
@@ -199,6 +203,11 @@ export default {
         currentCase = this.recoverSet[this.currectDate];
         previousCase = this.recoverSet[this.previousDate];
       }
+
+      if (currentCase == null || previousCase == null) {
+        return "Data not available";
+      }
+
       if (parseInt(currentCase) === parseInt(previousCase)) {
         return 0;
       } else {
