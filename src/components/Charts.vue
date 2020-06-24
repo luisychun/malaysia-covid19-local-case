@@ -67,4 +67,11 @@ export default {
   width: 80vw !important;
   height: 80vh !important;
 }
+
+@media (max-width: 768px) {
+  #chart-1,
+  #chart-2 {
+    margin-right: 2rem;
+  }
+}
 </style>>
