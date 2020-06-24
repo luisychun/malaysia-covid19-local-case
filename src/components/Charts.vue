@@ -11,7 +11,7 @@
         ></v-select>
       </v-col>
     </v-row>
-    <line-chart :data="fetchData(caseFilter)" :min="1"></line-chart>
+    <line-chart :data="fetchData(caseFilter)" :min="1" xmin="6/1/20"></line-chart>
   </div>
 </template>
 
