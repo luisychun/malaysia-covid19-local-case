@@ -1,6 +1,11 @@
 # Malaysia COVID-19 Local Cases
 
-## Project setup
+Visit link [here](https://luisychun.github.io/malaysia-covid19-local-case/)
+
+## Project Intro
+A Vue application that update daily case for Malaysia COVID-19. Data source get from JHU CSSE.
+
+### Project setup
 ```
 npm install
 ```
