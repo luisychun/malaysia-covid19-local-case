@@ -114,6 +114,7 @@ export default {
         }
         this.globalDataSet.push(dataContainer);
       }
+      console.log(this.globalDataSet);
       getMyData(this.globalDataSet, category);
     },
 
