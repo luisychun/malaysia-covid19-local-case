@@ -5,13 +5,13 @@
         <v-card class="pa-2" outlined tile>
           <v-card-text>
             <p class="display-1 text--primary">{{ key }}</p>
-            <p class="text--primary">{{  item }}</p>
+            <p class="text--primary">{{ item }}</p>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
     <v-row class="text-center justify-center">
-      <bar-chart :data="graphData" :library="options" width="80vw" height="70vh"></bar-chart>
+        <bar-chart :data="graphData" :library="options" width="80vw" height="70vh"></bar-chart>
     </v-row>
   </v-container>
 </template>
