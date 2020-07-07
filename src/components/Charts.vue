@@ -12,7 +12,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <line-chart :data="fetchData(caseFilter)" :library="options"></line-chart>      
+      <line-chart :data="fetchData(caseFilter)" :library="options"></line-chart>
     </v-row>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
           yAxes: [
             {
               ticks: {
-                display: true,
+                display: true
               }
             }
           ],
@@ -82,7 +82,7 @@ export default {
       )
     ) {
       this.options.scales.yAxes[0].ticks.display = false;
-      this.options.scales.xAxes[0].ticks.min = "6/1/20"
+      this.options.scales.xAxes[0].ticks.min = "6/1/20";
     }
   }
 };

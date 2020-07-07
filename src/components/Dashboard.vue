@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row class="text-center justify-center">
-      <v-col cols="12" lg="3" v-for="(category, index) in categories" :key="index">
+      <v-col cols="12" lg="3" v-for="(category, index) in filterArray" :key="index">
         <v-card class="pa-2" outlined tile>
           <v-card-text>
             <p class="display-1 text--primary">{{ category.title }}</p>
@@ -34,26 +34,33 @@
     <v-row class="text-center justify-center mt-4">
       <Charts :confirm="confirmProps" :death="deathProps" :recover="recoverProps" />
     </v-row>
+    <v-row class="text-center justify-center mt-4">
+      <State :state="stateData" />
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import Charts from "@/components/Charts.vue";
+import State from "@/components/State.vue";
 export default {
   name: "Dashboard",
   components: {
-    Charts
+    Charts,
+    State
   },
   data: () => ({
     categories: [
       { title: "Confirmed", color: "warning" },
       { title: "Death", color: "danger" },
-      { title: "Recovered", color: "primary" }
+      { title: "Recovered", color: "primary" },
+      { title: "States", color: "" }
     ],
     fetechURL: [
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
+      "https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv"
     ],
     globalDataKey: new Object(),
     globalDataSet: new Array(),
@@ -68,7 +75,14 @@ export default {
     latestDateGet: "",
     latestConfirmedIndex: "",
     latestDeadIndex: "",
-    latestRecoveredIndex: ""
+    latestRecoveredIndex: "",
+
+    // State Data Set
+    stateURL:
+      "https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv",
+    overallStateData: new Array(),
+    latestStateData: new Object(),
+    stateData: new Array()
   }),
   methods: {
     fetchCase() {
@@ -77,6 +91,7 @@ export default {
           url = this.fetechURL[i],
           papa = this.$papa,
           processData = this.processData,
+          processStateData = this.processStateData,
           dataSet = new Array();
 
         let promise = new Promise(function(resolve, reject) {
@@ -95,7 +110,11 @@ export default {
 
         promise
           .then(function() {
-            processData(dataSet, category);
+            if (category == "States") {
+              processStateData(dataSet);
+            } else {
+              processData(dataSet, category);
+            }
           })
           .catch(function(err) {
             // console.log(err);
@@ -114,7 +133,6 @@ export default {
         }
         this.globalDataSet.push(dataContainer);
       }
-      console.log(this.globalDataSet);
       getMyData(this.globalDataSet, category);
     },
 
@@ -221,10 +239,35 @@ export default {
     iconColor(title) {
       let color = parseInt(this.compareCase(title)) > 0 ? "red" : "green";
       return color;
+    },
+
+    // State Data
+    processStateData(dataSet) {
+      let key = dataSet[0];
+      for (let i = 1; i < dataSet.length - 1; i++) {
+        let dataContainer = new Object();
+        for (let k = 1; k < key.length; k++) {
+          dataContainer[key[k]] = dataSet[i][k];
+        }
+        this.overallStateData.push(dataContainer);
+      }
+      this.latestStateData = this.overallStateData[
+        this.overallStateData.length - 1
+      ];
+      this.stateData = Object.entries(this.latestStateData);      
     }
   },
 
-  computed: {},
+  computed: {
+    filterArray() {
+      let lists = [
+        { title: "Confirmed", color: "warning" },
+        { title: "Death", color: "danger" },
+        { title: "Recovered", color: "primary" },
+      ]
+      return lists
+    }
+  },
 
   created() {
     this.fetchCase();
