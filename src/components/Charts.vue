@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       caseFilter: "All",
-      items: ["All", "Confirmed", "Death", "Recovered"],
+      items: ["All", "Confirmed", "Deaths", "Recovered"],
       options: {
         scales: {
           yAxes: [
@@ -33,14 +33,14 @@ export default {
                 display: true
               }
             }
-          ],
-          xAxes: [
-            {
-              ticks: {
-                min: "4/1/20"
-              }
-            }
           ]
+          // xAxes: [
+          //   {
+          //     ticks: {
+          //       min: "4/1/20"
+          //     }
+          //   }
+          // ]
         }
       }
     };
@@ -57,17 +57,17 @@ export default {
         recoverList = [];
       list = [
         { name: "Confirm", data: this.confirm },
-        { name: "Death", data: this.death },
+        { name: "Deaths", data: this.death },
         { name: "Recover", data: this.recover }
       ];
       confirmList = [{ name: "Confirm", data: this.confirm }];
-      deathList = [{ name: "Death", data: this.death }];
+      deathList = [{ name: "Deaths", data: this.death }];
       recoverList = [{ name: "Recover", data: this.recover }];
       if (filter == "All") {
         return list;
       } else if (filter == "Confirmed") {
         return confirmList;
-      } else if (filter == "Death") {
+      } else if (filter == "Deaths") {
         return deathList;
       } else {
         return recoverList;

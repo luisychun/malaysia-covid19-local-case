@@ -51,12 +51,12 @@ export default {
   },
   data: () => ({
     categories: [
-      { title: "Confirmed", color: "warning" },
-      { title: "Death", color: "danger" },
-      { title: "Recovered", color: "primary" },
-      { title: "States", color: "" }
+      { title: "Confirmed" },
+      { title: "Deaths" },
+      { title: "Recovered" },
+      { title: "States" }
     ],
-    fetechURL: [
+    requestURL: [
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
@@ -70,7 +70,7 @@ export default {
     confirmProps: new Array(),
     deathProps: new Array(),
     recoverProps: new Array(),
-    currectDate: "",
+    currentDate: "",
     previousDate: "",
     latestDateGet: "",
     latestConfirmedIndex: "",
@@ -78,17 +78,15 @@ export default {
     latestRecoveredIndex: "",
 
     // State Data Set
-    stateURL:
-      "https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv",
     overallStateData: new Array(),
     latestStateData: new Object(),
     stateData: new Array()
   }),
   methods: {
-    fetchCase() {
+    fetchCases() {
       for (let i = 0; i < this.categories.length; i++) {
         let category = this.categories[i].title,
-          url = this.fetechURL[i],
+          url = this.requestURL[i],
           papa = this.$papa,
           processData = this.processData,
           processStateData = this.processStateData,
@@ -110,11 +108,9 @@ export default {
 
         promise
           .then(function() {
-            if (category == "States") {
-              processStateData(dataSet);
-            } else {
-              processData(dataSet, category);
-            }
+            category == "States"
+              ? processStateData(dataSet)
+              : processData(dataSet, category);
           })
           .catch(function(err) {
             // console.log(err);
@@ -140,32 +136,28 @@ export default {
       myData.forEach((my, index) => {
         let key = myData[index]["Country/Region"];
         if (key === "Malaysia") {
-          let last = "";
+          let last = new String();
+          let latestSet = myData[index];
+          last = Object.keys(latestSet).pop();
+          this.latestDateGet = last;
           if (category === "Confirmed") {
             this.confirmSet = myData[index];
-            last = Object.keys(this.confirmSet).pop();
             this.latestConfirmedIndex = this.confirmSet[last];
-            this.confirmProps = Object.entries(this.confirmSet);
-            this.confirmProps = this.confirmProps.splice(4);
-          } else if (category === "Death") {
+            this.confirmProps = Object.entries(this.confirmSet).splice(4);
+          } else if (category === "Deaths") {
             this.deathSet = myData[index];
-            last = Object.keys(this.deathSet).pop();
             this.latestDeadIndex = this.deathSet[last];
-            this.deathProps = Object.entries(this.deathSet);
-            this.deathProps = this.deathProps.splice(4);
+            this.deathProps = Object.entries(this.deathSet).splice(4);
           } else {
             this.recoverSet = myData[index];
-            last = Object.keys(this.recoverSet).pop();
             this.latestRecoveredIndex = this.recoverSet[last];
-            this.recoverProps = Object.entries(this.recoverSet);
-            this.recoverProps = this.recoverProps.splice(4);
+            this.recoverProps = Object.entries(this.recoverSet).splice(4);
           }
-          this.latestDateGet = last;
         }
       });
     },
 
-    getCurrectDate() {
+    getCurrentDate() {
       let today = new Date();
       today.setDate(today.getDate() - 1);
       let dd = today.getDate();
@@ -174,7 +166,7 @@ export default {
         .getFullYear()
         .toString()
         .substr(-2);
-      this.currectDate = `${mm}/${dd}/${yy}`;
+      this.currentDate = `${mm}/${dd}/${yy}`;
     },
 
     getPreviousDate() {
@@ -189,20 +181,10 @@ export default {
       this.previousDate = `${mm}/${dd}/${yy}`;
     },
 
-    showLatestCase(title) {
-      if (title === "Confirmed") {
-        return this.confirmSet[this.currectDate];
-      } else if (title === "Death") {
-        return this.deathSet[this.currectDate];
-      } else {
-        return this.recoverSet[this.currectDate];
-      }
-    },
-
     getLatestCaseAvailable(title) {
       if (title === "Confirmed") {
         return this.latestConfirmedIndex;
-      } else if (title === "Death") {
+      } else if (title === "Deaths") {
         return this.latestDeadIndex;
       } else {
         return this.latestRecoveredIndex;
@@ -213,13 +195,13 @@ export default {
       let currentCase = "";
       let previousCase = "";
       if (title == "Confirmed") {
-        currentCase = this.confirmSet[this.currectDate];
+        currentCase = this.confirmSet[this.currentDate];
         previousCase = this.confirmSet[this.previousDate];
-      } else if (title === "Death") {
-        currentCase = this.deathSet[this.currectDate];
+      } else if (title === "Deaths") {
+        currentCase = this.deathSet[this.currentDate];
         previousCase = this.deathSet[this.previousDate];
       } else {
-        currentCase = this.recoverSet[this.currectDate];
+        currentCase = this.recoverSet[this.currentDate];
         previousCase = this.recoverSet[this.previousDate];
       }
 
@@ -254,24 +236,24 @@ export default {
       this.latestStateData = this.overallStateData[
         this.overallStateData.length - 1
       ];
-      this.stateData = Object.entries(this.latestStateData);      
+      this.stateData = Object.entries(this.latestStateData);
     }
   },
 
   computed: {
     filterArray() {
       let lists = [
-        { title: "Confirmed", color: "warning" },
-        { title: "Death", color: "danger" },
-        { title: "Recovered", color: "primary" },
-      ]
-      return lists
+        { title: "Confirmed" },
+        { title: "Deaths" },
+        { title: "Recovered" }
+      ];
+      return lists;
     }
   },
 
   created() {
-    this.fetchCase();
-    this.getCurrectDate();
+    this.fetchCases();
+    this.getCurrentDate();
     this.getPreviousDate();
   }
 };
