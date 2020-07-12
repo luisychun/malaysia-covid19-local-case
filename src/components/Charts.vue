@@ -33,14 +33,15 @@ export default {
                 display: true
               }
             }
+          ],
+          xAxes: [
+            {
+              type: "time",
+              ticks: {
+                min: "4/1/20"
+              }
+            }
           ]
-          // xAxes: [
-          //   {
-          //     ticks: {
-          //       min: "4/1/20"
-          //     }
-          //   }
-          // ]
         }
       }
     };
