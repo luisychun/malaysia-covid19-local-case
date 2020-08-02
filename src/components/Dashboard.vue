@@ -6,16 +6,16 @@
           <v-card-text>
             <p class="display-1 text--primary">{{ category.title }}</p>
             <p class="display-2">{{ getLatestCaseAvailable(category.title) }}</p>
-            <span class="mt-2">
-              <v-icon
-                v-if="compareCase(category.title) > 0"
-                :color="iconColor(category.title)"
-              >mdi-arrow-top-right</v-icon>
-              <v-icon
-                v-else-if="compareCase(category.title) == 0"
-                :color="iconColor(category.title)"
-              >mdi-arrow-right</v-icon>
-              <v-icon v-else>mdi-window-close</v-icon>
+            <span class="mt-2" v-if="compareCase(category.title) > 0">
+              <v-icon :color="iconColor(category.title)">mdi-arrow-top-right</v-icon>
+              {{ compareCase(category.title) }} as previous day
+            </span>
+            <span class="mt-2" v-else-if="compareCase(category.title) == 0">
+              <v-icon :color="iconColor(category.title)">mdi-arrow-right</v-icon>
+              {{ compareCase(category.title) }} as previous day
+            </span>
+            <span class="mt-2" v-else>
+              <v-icon>mdi-window-close</v-icon>
               {{ compareCase(category.title) }}
             </span>
           </v-card-text>
@@ -88,9 +88,8 @@ export default {
         let category = this.categories[i].title,
           url = this.requestURL[i],
           papa = this.$papa,
-          processData = this.processData,
-          processStateData = this.processStateData,
-          dataSet = new Array();
+          dataSet = new Array(),
+          self = this;
 
         let promise = new Promise(function(resolve, reject) {
           papa.parse(url, {
@@ -109,8 +108,8 @@ export default {
         promise
           .then(function() {
             category == "States"
-              ? processStateData(dataSet)
-              : processData(dataSet, category);
+              ? self.processStateData(dataSet)
+              : self.processData(dataSet, category);
           })
           .catch(function(err) {
             // console.log(err);
@@ -120,8 +119,8 @@ export default {
     },
 
     processData(dataSet, category) {
-      let getMyData = this.getMyData;
       this.globalDataKey = dataSet[0];
+      let self = this;
       for (let i = 1; i < dataSet.length; i++) {
         let dataContainer = new Object();
         for (let k = 0; k < this.globalDataKey.length; k++) {
@@ -129,7 +128,7 @@ export default {
         }
         this.globalDataSet.push(dataContainer);
       }
-      getMyData(this.globalDataSet, category);
+      self.getMyData(this.globalDataSet, category);
     },
 
     getMyData(myData, category) {
