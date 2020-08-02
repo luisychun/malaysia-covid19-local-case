@@ -62,14 +62,16 @@ export default {
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
       "https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv"
     ],
-    globalDataKey: new Object(),
-    globalDataSet: new Array(),
+    dataKey: new Object(), // Province/State, Country/Region, Lat, Long, list of date
+    dataSet: new Array(),
     confirmSet: new Object(),
     deathSet: new Object(),
     recoverSet: new Object(),
+    // Props pass to chart component
     confirmProps: new Array(),
     deathProps: new Array(),
     recoverProps: new Array(),
+    // Current and previous date
     currentDate: "",
     previousDate: "",
     latestDateGet: "",
@@ -80,7 +82,7 @@ export default {
     // State Data Set
     overallStateData: new Array(),
     latestStateData: new Object(),
-    stateData: new Array()
+    stateData: new Array() // Props pass to state component
   }),
   methods: {
     fetchCases() {
@@ -88,13 +90,13 @@ export default {
         let category = this.categories[i].title,
           url = this.requestURL[i],
           papa = this.$papa,
-          dataSet = new Array(),
+          dataSet = new Array(), // Store all the data
           self = this;
 
-        let promise = new Promise(function(resolve, reject) {
+        let promise = new Promise((resolve, reject) => {
           papa.parse(url, {
             download: true,
-            complete: function(results) {
+            complete: results => {
               dataSet = results.data;
               if (dataSet) {
                 resolve();
@@ -106,29 +108,28 @@ export default {
         });
 
         promise
-          .then(function() {
+          .then(() => {
             category == "States"
               ? self.processStateData(dataSet)
-              : self.processData(dataSet, category);
+              : self.processData(dataSet, category); // Process Malaysia's State Data
           })
-          .catch(function(err) {
-            // console.log(err);
+          .catch(err => {
             return err;
           });
       }
     },
 
     processData(dataSet, category) {
-      this.globalDataKey = dataSet[0];
+      this.dataKey = dataSet[0];
       let self = this;
       for (let i = 1; i < dataSet.length; i++) {
-        let dataContainer = new Object();
-        for (let k = 0; k < this.globalDataKey.length; k++) {
-          dataContainer[this.globalDataKey[k]] = dataSet[i][k];
+        let dateMapCases = new Object();
+        for (let k = 0; k < this.dataKey.length; k++) {
+          dateMapCases[this.dataKey[k]] = dataSet[i][k];
         }
-        this.globalDataSet.push(dataContainer);
+        this.dataSet.push(dateMapCases);
       }
-      self.getMyData(this.globalDataSet, category);
+      self.getMyData(this.dataSet, category);
     },
 
     getMyData(myData, category) {
@@ -142,7 +143,7 @@ export default {
           if (category === "Confirmed") {
             this.confirmSet = myData[index];
             this.latestConfirmedIndex = this.confirmSet[last];
-            this.confirmProps = Object.entries(this.confirmSet).splice(4);
+            this.confirmProps = Object.entries(this.confirmSet).splice(4); // Pass only date with case data to chart props
           } else if (category === "Deaths") {
             this.deathSet = myData[index];
             this.latestDeadIndex = this.deathSet[last];
@@ -156,38 +157,26 @@ export default {
       });
     },
 
-    getCurrentDate() {
+    getDate(date) {
       let today = new Date();
-      today.setDate(today.getDate() - 1);
+      today.setDate(today.getDate() - date);
       let dd = today.getDate();
       let mm = today.getMonth() + 1;
       let yy = today
         .getFullYear()
         .toString()
         .substr(-2);
-      this.currentDate = `${mm}/${dd}/${yy}`;
-    },
-
-    getPreviousDate() {
-      let today = new Date();
-      today.setDate(today.getDate() - 2);
-      let dd = today.getDate();
-      let mm = today.getMonth() + 1;
-      let yy = today
-        .getFullYear()
-        .toString()
-        .substr(-2);
-      this.previousDate = `${mm}/${dd}/${yy}`;
+      date == 1
+        ? (this.currentDate = `${mm}/${dd}/${yy}`)
+        : (this.previousDate = `${mm}/${dd}/${yy}`);
     },
 
     getLatestCaseAvailable(title) {
-      if (title === "Confirmed") {
-        return this.latestConfirmedIndex;
-      } else if (title === "Deaths") {
-        return this.latestDeadIndex;
-      } else {
-        return this.latestRecoveredIndex;
-      }
+      return title === "Confirmed"
+        ? this.latestConfirmedIndex
+        : title === "Deaths"
+        ? this.latestDeadIndex
+        : this.latestRecoveredIndex;
     },
 
     compareCase(title) {
@@ -205,7 +194,7 @@ export default {
       }
 
       if (currentCase == null || previousCase == null) {
-        return "Data not available";
+        return "Latest case not available";
       }
 
       if (parseInt(currentCase) === parseInt(previousCase)) {
@@ -226,11 +215,11 @@ export default {
     processStateData(dataSet) {
       let key = dataSet[0];
       for (let i = 1; i < dataSet.length - 1; i++) {
-        let dataContainer = new Object();
+        let dateMapCases = new Object();
         for (let k = 1; k < key.length; k++) {
-          dataContainer[key[k]] = dataSet[i][k];
+          dateMapCases[key[k]] = dataSet[i][k];
         }
-        this.overallStateData.push(dataContainer);
+        this.overallStateData.push(dateMapCases);
       }
       this.latestStateData = this.overallStateData[
         this.overallStateData.length - 1
@@ -252,8 +241,8 @@ export default {
 
   created() {
     this.fetchCases();
-    this.getCurrentDate();
-    this.getPreviousDate();
+    this.getDate(1); // Get currect date
+    this.getDate(2); // Get previous date
   }
 };
 </script>
