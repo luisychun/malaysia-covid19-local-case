@@ -34,20 +34,20 @@
     <v-row class="text-center justify-center mt-4">
       <Charts :confirm="confirmProps" :death="deathProps" :recover="recoverProps" />
     </v-row>
-    <v-row class="text-center justify-center mt-4">
+    <!-- <v-row class="text-center justify-center mt-4">
       <State :state="stateData" />
-    </v-row>
+    </v-row>-->
   </v-container>
 </template>
 
 <script>
 import Charts from "@/components/Charts.vue";
-import State from "@/components/State.vue";
+// import State from "@/components/State.vue";
 export default {
   name: "Dashboard",
   components: {
-    Charts,
-    State
+    Charts
+    // State
   },
   data: () => ({
     categories: [
@@ -59,8 +59,8 @@ export default {
     requestURL: [
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
-      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
-      "https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv"
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+      // "https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv"
     ],
     dataKey: new Object(), // Province/State, Country/Region, Lat, Long, list of date
     dataSet: new Array(),
