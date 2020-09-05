@@ -38,7 +38,7 @@ export default {
             {
               type: "time",
               ticks: {
-                min: "4/1/20"
+                min: "6/1/20"
               }
             }
           ]
