@@ -207,7 +207,13 @@ export default {
     },
 
     iconColor(title) {
-      let color = parseInt(this.compareCase(title)) > 0 ? "red" : "green";
+      let color = "";
+      if (title !== "Recovered") {
+        color = parseInt(this.compareCase(title)) > 0 ? "red" : "green";
+      } else {
+        color = parseInt(this.compareCase(title)) > 0 ? "green" : "red";
+      }
+
       return color;
     },
 
