@@ -30,20 +30,20 @@ export default {
           yAxes: [
             {
               ticks: {
-                display: true
-              }
-            }
+                display: true,
+              },
+            },
           ],
           xAxes: [
             {
               type: "time",
               ticks: {
-                min: "8/1/20"
-              }
-            }
-          ]
-        }
-      }
+                min: "10/1/20",
+              },
+            },
+          ],
+        },
+      },
     };
   },
   methods: {
@@ -59,7 +59,7 @@ export default {
       list = [
         { name: "Confirm", data: this.confirm },
         { name: "Deaths", data: this.death },
-        { name: "Recover", data: this.recover }
+        { name: "Recover", data: this.recover },
       ];
       confirmList = [{ name: "Confirm", data: this.confirm }];
       deathList = [{ name: "Deaths", data: this.death }];
@@ -73,7 +73,7 @@ export default {
       } else {
         return recoverList;
       }
-    }
+    },
   },
   created() {
     this.fetchData(this.caseFilter);
@@ -85,7 +85,7 @@ export default {
       this.options.scales.yAxes[0].ticks.display = false;
       this.options.scales.xAxes[0].ticks.min = "6/1/20";
     }
-  }
+  },
 };
 </script>
 
