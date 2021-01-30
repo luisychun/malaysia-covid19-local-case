@@ -19,12 +19,12 @@
 
 <script>
 export default {
-  name: "Charts",
-  props: ["confirm", "death", "recover"],
+  name: 'Charts',
+  props: ['confirm', 'death', 'recover'],
   data() {
     return {
-      caseFilter: "All",
-      items: ["All", "Confirmed", "Deaths", "Recovered"],
+      caseFilter: 'All',
+      items: ['All', 'Confirmed', 'Deaths', 'Recovered'],
       options: {
         scales: {
           yAxes: [
@@ -36,57 +36,57 @@ export default {
           ],
           xAxes: [
             {
-              type: "time",
+              type: 'time',
               ticks: {
-                min: "10/1/20",
+                min: '12/1/20',
               },
             },
           ],
         },
       },
-    };
+    }
   },
   methods: {
     changeFilter(ans) {
-      this.caseFilter = ans;
-      this.fetchData(this.caseFilter);
+      this.caseFilter = ans
+      this.fetchData(this.caseFilter)
     },
     fetchData(filter) {
-      let list = new Array();
+      let list = new Array()
       let confirmList = [],
         deathList = [],
-        recoverList = [];
+        recoverList = []
       list = [
-        { name: "Confirm", data: this.confirm },
-        { name: "Deaths", data: this.death },
-        { name: "Recover", data: this.recover },
-      ];
-      confirmList = [{ name: "Confirm", data: this.confirm }];
-      deathList = [{ name: "Deaths", data: this.death }];
-      recoverList = [{ name: "Recover", data: this.recover }];
-      if (filter == "All") {
-        return list;
-      } else if (filter == "Confirmed") {
-        return confirmList;
-      } else if (filter == "Deaths") {
-        return deathList;
+        { name: 'Confirm', data: this.confirm },
+        { name: 'Deaths', data: this.death },
+        { name: 'Recover', data: this.recover },
+      ]
+      confirmList = [{ name: 'Confirm', data: this.confirm }]
+      deathList = [{ name: 'Deaths', data: this.death }]
+      recoverList = [{ name: 'Recover', data: this.recover }]
+      if (filter == 'All') {
+        return list
+      } else if (filter == 'Confirmed') {
+        return confirmList
+      } else if (filter == 'Deaths') {
+        return deathList
       } else {
-        return recoverList;
+        return recoverList
       }
     },
   },
   created() {
-    this.fetchData(this.caseFilter);
+    this.fetchData(this.caseFilter)
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
       )
     ) {
-      this.options.scales.yAxes[0].ticks.display = false;
-      this.options.scales.xAxes[0].ticks.min = "6/1/20";
+      this.options.scales.yAxes[0].ticks.display = false
+      this.options.scales.xAxes[0].ticks.min = '6/1/20'
     }
   },
-};
+}
 </script>
 
 <style scoped>
@@ -102,5 +102,5 @@ export default {
   #chart-2 {
     width: 90vw !important;
   }
-}
-</style>>
+}</style
+>>
