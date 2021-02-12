@@ -37,9 +37,9 @@ export default {
           xAxes: [
             {
               type: 'time',
-              ticks: {
-                min: '12/1/20',
-              },
+              // ticks: {
+              //   min: '12/1/20',
+              // },
             },
           ],
         },
