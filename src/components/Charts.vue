@@ -12,7 +12,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <line-chart :data="fetchData(caseFilter)" :library="options"></line-chart>
+      <area-chart :data="fetchData(caseFilter)" :library="options"></area-chart>
     </v-row>
   </div>
 </template>

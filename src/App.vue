@@ -7,7 +7,7 @@
       <v-spacer></v-spacer>
       <v-btn
         small
-        href="https://github.com/luisychun/malaysia-covid19-local-case"
+        href="https://github.com/luisychun/mys-covid-local-case/"
         target="_blank"
         text
       >
@@ -24,12 +24,12 @@
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
 
   components: {},
 
   data: () => ({
     //
-  })
-};
+  }),
+}
 </script>
