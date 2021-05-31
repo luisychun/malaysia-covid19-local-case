@@ -27,5 +27,5 @@ export default {
   #chart-2 {
     width: 90vw !important;
   }
-}
-</style>>
+}</style
+>>

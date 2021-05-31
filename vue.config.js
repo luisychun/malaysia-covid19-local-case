@@ -1,7 +1,7 @@
 module.exports = {
-  transpileDependencies: ['vuetify'],
+  transpileDependencies: ["vuetify"],
   // publicPath: process.env.NODE_ENV === 'production'
   //   ? '/dist/'
   //   : '/',
-  publicPath: '/mys-covid-local-case',
-}
+  publicPath: "/mys-covid-local-case"
+};

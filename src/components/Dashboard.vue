@@ -63,26 +63,26 @@
 </template>
 
 <script>
-import Charts from '@/components/Charts.vue'
-import State from '@/components/State.vue'
+import Charts from "@/components/Charts.vue";
+import State from "@/components/State.vue";
 export default {
-  name: 'Dashboard',
+  name: "Dashboard",
   components: {
     Charts,
-    State,
+    State
   },
   data: () => ({
     categories: [
-      { title: 'Confirmed' },
-      { title: 'Deaths' },
-      { title: 'Recovered' },
-      { title: 'States' },
+      { title: "Confirmed" },
+      { title: "Deaths" },
+      { title: "Recovered" },
+      { title: "States" }
     ],
     requestURL: [
-      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv',
-      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv',
-      'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv',
-      'https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv',
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv",
+      "https://raw.githubusercontent.com/ynshung/covid-19-malaysia/master/covid-19-my-states-cases.csv"
     ],
     dataKey: new Object(), // Province/State, Country/Region, Lat, Long, list of date
     dataSet: new Array(),
@@ -94,18 +94,18 @@ export default {
     deathProps: new Array(),
     recoverProps: new Array(),
     // Current and previous date
-    currentDate: '',
-    previousDate: '',
-    latestDateGet: '',
-    latestDateGetState: '',
-    latestConfirmedIndex: '',
-    latestDeadIndex: '',
-    latestRecoveredIndex: '',
+    currentDate: "",
+    previousDate: "",
+    latestDateGet: "",
+    latestDateGetState: "",
+    latestConfirmedIndex: "",
+    latestDeadIndex: "",
+    latestRecoveredIndex: "",
 
     // State Data Set
     overallStateData: new Array(),
     latestStateData: new Object(),
-    stateData: new Array(), // Props pass to state component
+    stateData: new Array() // Props pass to state component
   }),
   methods: {
     fetchCases() {
@@ -114,165 +114,165 @@ export default {
           url = this.requestURL[i],
           papa = this.$papa,
           dataSet = new Array(), // Store all the data
-          self = this
+          self = this;
 
         let promise = new Promise((resolve, reject) => {
           papa.parse(url, {
             download: true,
-            complete: (results) => {
-              dataSet = results.data
+            complete: results => {
+              dataSet = results.data;
               if (dataSet) {
-                resolve()
+                resolve();
               } else {
-                reject()
+                reject();
               }
-            },
-          })
-        })
+            }
+          });
+        });
 
         promise
           .then(() => {
-            category == 'States'
+            category == "States"
               ? self.processStateData(dataSet)
-              : self.processData(dataSet, category) // Process Malaysia's State Data
+              : self.processData(dataSet, category); // Process Malaysia's State Data
           })
-          .catch((err) => {
-            return err
-          })
+          .catch(err => {
+            return err;
+          });
       }
     },
 
     processData(dataSet, category) {
-      this.dataKey = dataSet[0]
-      let self = this
+      this.dataKey = dataSet[0];
+      let self = this;
       for (let i = 1; i < dataSet.length; i++) {
-        let dateMapCases = new Object()
+        let dateMapCases = new Object();
         for (let k = 0; k < this.dataKey.length; k++) {
-          dateMapCases[this.dataKey[k]] = dataSet[i][k]
+          dateMapCases[this.dataKey[k]] = dataSet[i][k];
         }
-        this.dataSet.push(dateMapCases)
+        this.dataSet.push(dateMapCases);
       }
-      self.getMyData(this.dataSet, category)
+      self.getMyData(this.dataSet, category);
     },
 
     getMyData(myData, category) {
       myData.forEach((my, index) => {
-        let key = myData[index]['Country/Region']
-        if (key === 'Malaysia') {
-          let last = new String()
-          let latestSet = myData[index]
-          last = Object.keys(latestSet).pop()
-          this.latestDateGet = last
-          if (category === 'Confirmed') {
-            this.confirmSet = myData[index]
-            this.latestConfirmedIndex = this.confirmSet[last]
-            this.confirmProps = Object.entries(this.confirmSet).splice(4) // Pass only date with case data to chart props
-          } else if (category === 'Deaths') {
-            this.deathSet = myData[index]
-            this.latestDeadIndex = this.deathSet[last]
-            this.deathProps = Object.entries(this.deathSet).splice(4)
+        let key = myData[index]["Country/Region"];
+        if (key === "Malaysia") {
+          let last = new String();
+          let latestSet = myData[index];
+          last = Object.keys(latestSet).pop();
+          this.latestDateGet = last;
+          if (category === "Confirmed") {
+            this.confirmSet = myData[index];
+            this.latestConfirmedIndex = this.confirmSet[last];
+            this.confirmProps = Object.entries(this.confirmSet).splice(4); // Pass only date with case data to chart props
+          } else if (category === "Deaths") {
+            this.deathSet = myData[index];
+            this.latestDeadIndex = this.deathSet[last];
+            this.deathProps = Object.entries(this.deathSet).splice(4);
           } else {
-            this.recoverSet = myData[index]
-            this.latestRecoveredIndex = this.recoverSet[last]
-            this.recoverProps = Object.entries(this.recoverSet).splice(4)
+            this.recoverSet = myData[index];
+            this.latestRecoveredIndex = this.recoverSet[last];
+            this.recoverProps = Object.entries(this.recoverSet).splice(4);
           }
         }
-      })
+      });
     },
 
     getDate(date) {
-      let today = new Date()
-      today.setDate(today.getDate() - date)
-      let dd = today.getDate()
-      let mm = today.getMonth() + 1
+      let today = new Date();
+      today.setDate(today.getDate() - date);
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1;
       let yy = today
         .getFullYear()
         .toString()
-        .substr(-2)
+        .substr(-2);
       date == 1
         ? (this.currentDate = `${mm}/${dd}/${yy}`)
-        : (this.previousDate = `${mm}/${dd}/${yy}`)
+        : (this.previousDate = `${mm}/${dd}/${yy}`);
     },
 
     getLatestCaseAvailable(title) {
-      return title === 'Confirmed'
+      return title === "Confirmed"
         ? this.latestConfirmedIndex
-        : title === 'Deaths'
+        : title === "Deaths"
         ? this.latestDeadIndex
-        : this.latestRecoveredIndex
+        : this.latestRecoveredIndex;
     },
 
     compareCase(title) {
-      let currentCase = ''
-      let previousCase = ''
-      if (title == 'Confirmed') {
-        currentCase = this.confirmSet[this.currentDate]
-        previousCase = this.confirmSet[this.previousDate]
-      } else if (title === 'Deaths') {
-        currentCase = this.deathSet[this.currentDate]
-        previousCase = this.deathSet[this.previousDate]
+      let currentCase = "";
+      let previousCase = "";
+      if (title == "Confirmed") {
+        currentCase = this.confirmSet[this.currentDate];
+        previousCase = this.confirmSet[this.previousDate];
+      } else if (title === "Deaths") {
+        currentCase = this.deathSet[this.currentDate];
+        previousCase = this.deathSet[this.previousDate];
       } else {
-        currentCase = this.recoverSet[this.currentDate]
-        previousCase = this.recoverSet[this.previousDate]
+        currentCase = this.recoverSet[this.currentDate];
+        previousCase = this.recoverSet[this.previousDate];
       }
 
       if (currentCase == null || previousCase == null) {
-        return 'Latest case not available'
+        return "Latest case not available";
       }
 
       if (parseInt(currentCase) === parseInt(previousCase)) {
-        return 0
+        return 0;
       } else {
-        let diff = ''
-        diff = currentCase - previousCase
-        return parseInt(diff)
+        let diff = "";
+        diff = currentCase - previousCase;
+        return parseInt(diff);
       }
     },
 
     iconColor(title) {
-      let color = ''
-      if (title !== 'Recovered') {
-        color = parseInt(this.compareCase(title)) > 0 ? 'red' : 'green'
+      let color = "";
+      if (title !== "Recovered") {
+        color = parseInt(this.compareCase(title)) > 0 ? "red" : "green";
       } else {
-        color = parseInt(this.compareCase(title)) > 0 ? 'green' : 'red'
+        color = parseInt(this.compareCase(title)) > 0 ? "green" : "red";
       }
 
-      return color
+      return color;
     },
 
     // State Data
     processStateData(dataSet) {
-      let key = dataSet[0]
-      this.latestDateGetState = dataSet[dataSet.length - 2][0]
+      let key = dataSet[0];
+      this.latestDateGetState = dataSet[dataSet.length - 2][0];
       for (let i = 1; i < dataSet.length - 1; i++) {
-        let dateMapCases = new Object()
+        let dateMapCases = new Object();
         for (let k = 1; k < key.length; k++) {
-          dateMapCases[key[k]] = dataSet[i][k]
+          dateMapCases[key[k]] = dataSet[i][k];
         }
-        this.overallStateData.push(dateMapCases)
+        this.overallStateData.push(dateMapCases);
       }
       this.latestStateData = this.overallStateData[
         this.overallStateData.length - 1
-      ]
-      this.stateData = Object.entries(this.latestStateData)
-    },
+      ];
+      this.stateData = Object.entries(this.latestStateData);
+    }
   },
 
   computed: {
     filterArray() {
       let lists = [
-        { title: 'Confirmed' },
-        { title: 'Deaths' },
-        { title: 'Recovered' },
-      ]
-      return lists
-    },
+        { title: "Confirmed" },
+        { title: "Deaths" },
+        { title: "Recovered" }
+      ];
+      return lists;
+    }
   },
 
   created() {
-    this.fetchCases()
-    this.getDate(1) // Get currect date
-    this.getDate(2) // Get previous date
-  },
-}
+    this.fetchCases();
+    this.getDate(1); // Get currect date
+    this.getDate(2); // Get previous date
+  }
+};
 </script>
